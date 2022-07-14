@@ -15,8 +15,7 @@ app.get('/users',(req,res) =>{
 });
 //Getting spesific user based on a given id;
 app.get('/users/:id',(req,res) =>{
-    const id= parseInt(req.params.id);
-   user = users.find(element => element.id === id);
+   const user = users.find(element => element.id === parseInt(req.params.id));
    if(!user){
     res.status(404).send('<h2>404:User not found</h2>');
    }
@@ -25,18 +24,15 @@ app.get('/users/:id',(req,res) =>{
 
 // Adding user by use of post method.
 app.post('/users',(req,res) =>{
-const newUser = [{
-        id:users.length +1,
-        name:req.body.name,
-        age:req.body.age
-    }];
+    const  {name,age} = req.body;
+    const newUser = {name,age,id:users.length+1}; 
      users.push(newUser);
     res.send(newUser);
 });
 
 //apudating the user with the help of PUT method
 
-//function yo find user index
+//function to find user index
 function userIndex(items,id){
     let index = -1;
     for(let i = 0;i < items.length;i++){
@@ -49,14 +45,18 @@ function userIndex(items,id){
 }
 
 app.put('/users/:id',(req,res) =>{
-    const {id} = parseInt(req.params.id);
+    const id  = parseInt(req.params.id);
     const body = req.body;
-  const  userToUpdate = users.find(element => element.id === id);
-   const updateUser = {userToUpdate ,body}
-   const indexOfUser =userIndex(users,parseInt(id));
-users[indexOfUser] = updateUser;
-res.send(updateUser);
+    const userToUpdate = users.find(element => element.id === parseInt(id));
+    const updateUser = {...userToUpdate,...body};
+    const userndex = userIndex(users,id);
+    users[userndex] = updateUser; 
+    console.log(body);
+    console.log(userToUpdate);
+    console.log(id);
+    console.log(updateUser);
 
+    res.send(updateUser);
 });
 
 
